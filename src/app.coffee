@@ -130,10 +130,10 @@ root =
 app.post "/login", passport.authenticate("local", successRedirect:"/#{root}", failureRedirect:"/login_page")
 
 app.get "/login_page", (req, res, next) ->
-  res.render 'login'
+  res.render 'login', {menu:'login', title: 'Login'}
 
 app.get "/#{root}", isLoggedIn, (req, res, next) ->
-  res.render 'index', title: 'Crash Reports', records: db.getAllRecords()
+  res.render 'index', {menu: 'crash', title: 'Crash Reports', records: db.getAllRecords()}
 
 app.get "/#{root}view/:id", isLoggedIn, (req, res, next) ->
   db.restoreRecord req.params.id, (err, record) ->
@@ -142,7 +142,7 @@ app.get "/#{root}view/:id", isLoggedIn, (req, res, next) ->
     reader.getStackTraceFromRecord record, (err, report) ->
       return next err if err?
       fields = record.fields
-      res.render 'view', {title: 'Crash Report', report, fields}
+      res.render 'view', {menu: 'crash', title: 'Crash Report', report, fields}
 
 app.get "/#{root}symbol/", isLoggedIn, (req, res, next) ->
-  res.render 'symbols', title: 'Symbols', symbols: symbDb.getAllRecords()
+  res.render 'symbols', {menu: 'symbol', title: 'Symbols', symbols: symbDb.getAllRecords()}
