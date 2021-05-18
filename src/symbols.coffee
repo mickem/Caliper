@@ -4,7 +4,7 @@ mkdirp = require 'mkdirp'
 formidable = require 'formidable'
 
 # callback is of the form (error, destination).
-module.exports.saveSymbols = (req, callback) ->
+module.exports.saveSymbols = (req, symbDb, callback) ->
   form = new formidable.IncomingForm()
   return form.parse req, (error, fields, files) ->
     # return if this is a malformed request.
@@ -15,7 +15,7 @@ module.exports.saveSymbols = (req, callback) ->
 
     # this puts files in a path of:
     # destination + fields.debug_file + debug_identifier
-    output_file_name = fields.debug_file.replace ".pdb", ".sym"
+    output_file_name = files.symbol_file.name.replace ".pdb", ".sym"
     # TODO: make this serialize-able
     destination = "pool/symbols"
     destination = path.join destination, fields.debug_file
@@ -29,4 +29,5 @@ module.exports.saveSymbols = (req, callback) ->
       # copy the POST to destination.
       fs.copy files.symbol_file.path, destination, (error) ->
         return callback new Error("Cannot create file: #{destination}") if error?
+        symbDb.saveSymbol fields.debug_identifier, fields.debug_file
         return callback null, destination

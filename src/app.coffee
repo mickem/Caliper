@@ -116,8 +116,9 @@ app.post '/crash_upload', (req, res, next) ->
     res.end()
 
 # handle the sympol upload post command.
-app.post '/symbol_upload', isLoggedIn, (req, res, next) ->
-  return symbols.saveSymbols req, (error, destination) ->
+app.post '/symbol_upload', (req, res, next) ->
+  return next "Invalid key" if req.query.key != api_key
+  return symbols.saveSymbols req, symbDb, (error, destination) ->
     return next error if error?
     console.log "Saved Symbols: #{destination}"
     return res.end()
