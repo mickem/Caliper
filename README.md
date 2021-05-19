@@ -18,6 +18,12 @@ This intends to be a simple server for crash reports sent by
 
 ## Run
 
+### Using Docker
+
+You can use Dockerfile provided by the repository to build and run server in Docker
+
+### Directly
+
 * `npm install .` -- if this fails make sure you have node-gyp setup correctly
 * `grunt`
 * Put your breakpad symbols under `pool/symbols/PDBNAME/PDBUNIQUEIDENTIFIER/PDBNAMEASSYM`
